@@ -1,5 +1,9 @@
 # ⚡ AI Multi-Agent Trading Assistant
 
+🚀 Live AI Trading Agent: https://trading-agent-production-feab.up.railway.app
+
+💡 Built with FastAPI + Docker, delivering real-time AI-powered trading insights and automation.
+
 Multi-agent trading decision support system using Groq LLM, Yahoo Finance, Binance, and NewsAPI.
 
 ---
