@@ -4,6 +4,8 @@
 
 💡 Built with FastAPI + Docker, delivering real-time AI-powered trading insights and automation.
 
+Docker image : chandu013/trading-agent:latest
+
 Multi-agent trading decision support system using Groq LLM, Yahoo Finance, Binance, and NewsAPI.
 
 ---
