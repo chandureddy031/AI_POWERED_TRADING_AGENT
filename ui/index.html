@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AI Trading Assistant</title>
+<style>
+:root{--bg:#0a0e1a;--panel:#111827;--card:#1a2236;--border:#1f2d45;--accent:#3b82f6;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--text:#e2e8f0;--muted:#64748b;--radius:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f172a,#1e1b4b);border-bottom:1px solid var(--border);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:1.4rem;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.container{max-width:1400px;margin:0 auto;padding:28px 24px;}
+.grid{display:grid;grid-template-columns:360px 1fr;gap:24px;}
+@media(max-width:900px){.grid{grid-template-columns:1fr;}}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+.ctitle{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;}
+label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;}
+.fg{margin-bottom:14px;}
+input,select{width:100%;background:#0d1526;border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:.9rem;outline:none;}
+input:focus,select:focus{border-color:var(--accent);}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;transition:.2s;}
+.btn:hover{opacity:.9;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn2{background:#1a2236;border:1px solid var(--border);}
+.hidden{display:none;}
+/* loader */
+.loader{display:none;text-align:center;padding:50px;}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.step{display:block;font-size:.82rem;color:var(--muted);margin:4px 0;transition:.3s;}
+.step.active{color:var(--text);}
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:50px;font-size:1.1rem;font-weight:700;}
+.BUY{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green);}
+.SELL{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red);}
+.HOLD{background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid var(--yellow);}
+/* conf bar */
+.cbar{background:#0d1526;border-radius:50px;height:8px;overflow:hidden;margin-top:6px;}
+.cfill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .8s;}
+/* grids */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;}
+.sitem{background:#0d1526;border-radius:10px;padding:12px;text-align:center;}
+.sitem .v{font-size:1rem;font-weight:600;margin-top:4px;}
+.bull{color:var(--green);}.bear{color:var(--red);}.neut{color:var(--yellow);}
+/* levels */
+.lbox{background:#0d1526;border-radius:10px;padding:14px;text-align:center;}
+.lbox .ll{font-size:.7rem;color:var(--muted);text-transform:uppercase;}
+.lbox .lv{font-size:1.1rem;font-weight:700;margin-top:4px;}
+.lgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+/* tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:18px;flex-wrap:wrap;}
+.tab{padding:8px 14px;font-size:.82rem;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;}
+.tab.on{color:var(--accent);border-bottom-color:var(--accent);}
+/* strategy items */
+.si{background:#0d1526;border-radius:10px;padding:14px;margin-bottom:10px;border-left:3px solid var(--border);}
+.si.bull-s{border-left-color:var(--green);}
+.si.bear-s{border-left-color:var(--red);}
+/* history */
+.hr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:.85rem;}
+.hr:last-child{border:none;}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="logo">⚡ AI Trading Assistant</div><div style="font-size:.8rem;color:var(--muted)">Multi-Agent Decision Support</div></div>
+  <div style="font-size:.8rem;color:var(--muted)"><span class="dot"></span>Online</div>
+</header>
+
+<div class="container">
+<div class="grid">
+
+<!-- LEFT -->
+<div>
+<div class="panel">
+  <div class="ctitle">📊 Analysis Parameters</div>
+  <div class="fg"><label>Symbol (Stock / Crypto)</label><input id="sym" value="BTCUSDT" placeholder="BTCUSDT, AAPL, RELIANCE.NS"/></div>
+  <div class="fg"><label>Timeframe</label>
+    <select id="tf">
+      <option value="1m">1 Minute</option><option value="5m">5 Minutes</option>
+      <option value="15m">15 Minutes</option><option value="1h" selected>1 Hour</option>
+      <option value="4h">4 Hours</option><option value="1d">1 Day</option><option value="1w">1 Week</option>
+    </select>
+  </div>
+  <div class="fg"><label>Trade Type</label>
+    <select id="tt">
+      <option value="intraday">Intraday</option><option value="swing" selected>Swing</option>
+      <option value="positional">Positional</option><option value="scalping">Scalping</option>
+    </select>
+  </div>
+  <div class="fg"><label>Account Size (USD)</label><input id="acc" type="number" value="10000"/></div>
+  <div class="fg"><label>Open Trades</label><input id="ot" type="number" value="0" min="0"/></div>
+  <div class="fg"><label>Invest Amount (USD)</label><input id="inv" type="number" value="1000"/></div>
+  <div class="fg"><label>Leverage</label>
+    <select id="lev">
+      <option value="1">1x (Spot)</option><option value="2">2x</option><option value="5">5x</option>
+      <option value="10">10x</option><option value="20">20x</option><option value="50">50x</option>
+    </select>
+  </div>
+  <button class="btn" id="abtn" onclick="go()">🔍 Run Analysis</button>
+</div>
+
+<div class="panel">
+  <div class="ctitle">🕐 Recent Analyses</div>
+  <div id="hist">Loading...</div>
+  <button class="btn btn2" style="margin-top:12px;" onclick="loadHist()">Refresh</button>
+</div>
+</div>
+
+<!-- RIGHT -->
+<div>
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <div style="font-size:.95rem;margin-bottom:12px;">Running 8-Agent Analysis...</div>
+    <span class="step" id="s0">📡 Fetching market data...</span>
+    <span class="step" id="s1">🔍 Identifying asset...</span>
+    <span class="step" id="s2">📰 Gathering news...</span>
+    <span class="step" id="s3">📈 Technical analysis (SMC/ICT)...</span>
+    <span class="step" id="s4">⚖️ Risk evaluation...</span>
+    <span class="step" id="s5">🧠 Decision agent...</span>
+  </div>
+
+  <!-- Empty -->
+  <div class="panel" id="empty" style="text-align:center;padding:60px;">
+    <div style="font-size:3rem;margin-bottom:12px;">📊</div>
+    <div style="font-size:1.1rem;font-weight:600;">Ready to Analyse</div>
+    <div style="color:var(--muted);margin-top:8px;font-size:.9rem;">Enter a symbol and run analysis.</div>
+  </div>
+
+  <!-- Results -->
+  <div id="res" class="hidden">
+
+    <!-- Decision -->
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div class="ctitle">🎯 Trade Decision</div>
+          <div id="abadge" class="badge HOLD">⚪ HOLD</div>
+          <div id="reason" style="margin-top:10px;font-size:.85rem;color:var(--muted);max-width:500px;"></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="ctitle">Confidence</div>
+          <div id="confpct" style="font-size:2rem;font-weight:700;color:var(--accent);">0%</div>
+          <div class="cbar" style="width:120px;margin-left:auto;margin-top:6px;"><div class="cfill" id="cfill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="lgrid" style="margin-top:18px;">
+        <div class="lbox"><div class="ll" style="color:var(--accent)">Entry Zone</div><div class="lv" id="lentry" style="color:var(--accent)">—</div></div>
+        <div class="lbox"><div class="ll" style="color:var(--red)">Stop Loss</div><div class="lv" id="lsl" style="color:var(--red)">—</div></div>
+        <div class="lbox"><div class="ll" style="color:var(--green)">Target 1 / 2</div><div class="lv" id="ltp" style="color:var(--green)">—</div></div>
+      </div>
+    </div>
+
+    <!-- Signal breakdown -->
+    <div class="panel">
+      <div class="ctitle">📡 Agent Signal Breakdown</div>
+      <div class="sgrid" id="sigrid"></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="panel">
+      <div class="tabs">
+        <div class="tab on" onclick="tab(this,'technical')">📈 Technical</div>
+        <div class="tab" onclick="tab(this,'strategies')">🎯 Strategies</div>
+        <div class="tab" onclick="tab(this,'patterns')">🕯️ Patterns</div>
+        <div class="tab" onclick="tab(this,'fundamental')">📋 Fundamental</div>
+        <div class="tab" onclick="tab(this,'risk')">⚖️ Risk</div>
+        <div class="tab" onclick="tab(this,'profit')">💰 Profit</div>
+        <div class="tab" onclick="tab(this,'plan')">📝 Trade Plan</div>
+      </div>
+
+      <div id="t-technical">
+        <div id="tech-content"></div>
+      </div>
+      <div id="t-strategies" class="hidden">
+        <div id="strat-content"></div>
+      </div>
+      <div id="t-patterns" class="hidden">
+        <div id="pats-content"></div>
+      </div>
+      <div id="t-fundamental" class="hidden">
+        <div id="fund-content"></div>
+      </div>
+      <div id="t-risk" class="hidden">
+        <div id="risk-content"></div>
+      </div>
+      <div id="t-profit" class="hidden">
+        <div id="profit-content"></div>
+      </div>
+      <div id="t-plan" class="hidden">
+        <div id="plan-content"></div>
+      </div>
+    </div>
+
+  </div><!-- /res -->
+</div>
+</div>
+</div>
+
+<script>
+const TABS = ['technical','strategies','patterns','fundamental','risk','profit','plan'];
+
+function tab(el, name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  TABS.forEach(n => {
+    const el2 = document.getElementById('t-' + n);
+    if (el2) el2.classList.toggle('hidden', n !== name);
+  });
+}
+
+async function go() {
+  const sym = document.getElementById('sym').value.trim().toUpperCase();
+  if (!sym) { alert('Enter a symbol'); return; }
+  document.getElementById('empty').classList.add('hidden');
+  document.getElementById('res').classList.add('hidden');
+  const loader = document.getElementById('loader');
+  loader.style.display = 'block';
+  document.getElementById('abtn').disabled = true;
+  let si = 0;
+  const steps = document.querySelectorAll('.step');
+  steps.forEach(s => s.classList.remove('active'));
+  const timer = setInterval(() => { if (si < steps.length) steps[si++].classList.add('active'); }, 1800);
+  try {
+    const r = await fetch('/api/analyze', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        symbol: sym,
+        timeframe: document.getElementById('tf').value,
+        trade_type: document.getElementById('tt').value,
+        account_size: parseFloat(document.getElementById('acc').value)||10000,
+        open_trades: parseInt(document.getElementById('ot').value)||0,
+        invest_amount: parseFloat(document.getElementById('inv').value)||1000,
+        leverage: parseFloat(document.getElementById('lev').value)||1,
+      })
+    });
+    clearInterval(timer);
+    if (!r.ok) { const e=await r.json(); throw new Error(e.detail||'Error'); }
+    const json = await r.json();
+    render(json.data);
+    loadHist();
+  } catch(e) {
+    clearInterval(timer);
+    alert('Error: ' + e.message);
+    document.getElementById('empty').classList.remove('hidden');
+  } finally {
+    loader.style.display = 'none';
+    document.getElementById('abtn').disabled = false;
+  }
+}
+
+function sc(v) { return v==='bullish'?'bull':v==='bearish'?'bear':'neut'; }
+function fmt(v, d=2) { return (v!=null && v!==undefined) ? (+v).toFixed(d) : '—'; }
+
+function render(data) {
+  const d = data.decision    || {};
+  const t = data.technical   || {};
+  const f = data.fundamental || {};
+  const n = data.news        || {};
+  const s = data.strategy    || {};
+  const r = data.risk        || {};
+  const ind = t.raw_indicators || {};
+  const sr  = t.raw_sr        || {};
+  const fib = t.raw_fibonacci  || {};
+  const liq = t.raw_liquidity  || {};
+
+  // Action
+  const action = (d.action||'HOLD').toUpperCase();
+  const emoji = action==='BUY'?'🟢':action==='SELL'?'🔴':'⚪';
+  const ab = document.getElementById('abadge');
+  ab.textContent = emoji + ' ' + action;
+  ab.className = 'badge ' + action;
+  document.getElementById('reason').textContent = d.reason || '';
+
+  // Confidence
+  const conf = Math.round((d.confidence||0)*100);
+  document.getElementById('confpct').textContent = conf + '%';
+  document.getElementById('cfill').style.width = conf + '%';
+
+  // Levels
+  const ez = d.entry_zone || s.entry_zone || [];
+  document.getElementById('lentry').textContent = ez.length ? fmt(ez[0])+' – '+fmt(ez[1]) : '—';
+  document.getElementById('lsl').textContent = fmt(d.stop_loss || s.stop_loss);
+  const tp1 = d.target_1 || s.target_1;
+  const tp2 = d.target_2 || s.target_2;
+  document.getElementById('ltp').textContent = tp1 ? fmt(tp1)+' / '+fmt(tp2) : '—';
+
+  // Signal grid
+  document.getElementById('sigrid').innerHTML = [
+    ['📰 News',    n.sentiment||'—',  sc(n.sentiment),   Math.round((n.confidence||0)*100)+'%'],
+    ['📋 Fundam.', f.fundamental_signal||'—', sc(f.fundamental_signal), Math.round((f.confidence||0)*100)+'%'],
+    ['📈 Tech.',   t.technical_signal||'—',   sc(t.technical_signal),   Math.round((t.confidence||0)*100)+'%'],
+    ['🎯 Setup',   s.setup||'—',      s.valid?'bull':'neut', Math.round((s.setup_confidence||0)*100)+'%'],
+    ['⚖️ Risk',    r.go?'GO':'NO-GO', r.go?'bull':'bear', r.risk_level||''],
+    ['R:R',       (d.risk_reward||r.risk_reward||'—')+'x','neut',''],
+  ].map(([l,v,c,p]) => `<div class="sitem"><div style="font-size:.7rem;color:var(--muted)">${l}</div><div class="v ${c}">${v}</div>${p?`<div style="font-size:.7rem;color:var(--muted)">${p}</div>`:''}</div>`).join('');
+
+  // ── TECHNICAL TAB
+  const bos = t.raw_bos_choch || {};
+  const obs = t.raw_order_blocks || {};
+  document.getElementById('tech-content').innerHTML = `
+    <div class="sgrid" style="margin-bottom:14px;">
+      ${[['EMA 9',ind.ema_9],['EMA 21',ind.ema_21],['EMA 50',ind.ema_50],['EMA 200',ind.ema_200],
+         ['RSI 14',ind.rsi_14],['MACD',ind.macd],['ATR 14',ind.atr_14],['Vol Ratio',ind.vol_ratio],
+         ['Stoch K',ind.stoch_k],['ADX',ind.adx_14],['CCI',ind.cci_20],['MFI',ind.mfi_14]
+        ].map(([l,v])=>`<div class="sitem"><div style="font-size:.7rem;color:var(--muted)">${l}</div><div class="v neut">${v!=null?v:'—'}</div></div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="ctitle">SMC / ICT Levels</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.82rem;">
+        <div>Trend: <strong>${ind.trend||'—'}</strong></div>
+        <div>BOS Bull: <strong class="${bos.bos_bullish?'bull':'neut'}">${bos.bos_bullish?'✅':'❌'}</strong></div>
+        <div>BOS Bear: <strong class="${bos.bos_bearish?'bear':'neut'}">${bos.bos_bearish?'✅':'❌'}</strong></div>
+        <div>CHoCH Bull: <strong class="${bos.choch_bullish?'bull':'neut'}">${bos.choch_bullish?'✅':'❌'}</strong></div>
+        <div>CHoCH Bear: <strong class="${bos.choch_bearish?'bear':'neut'}">${bos.choch_bearish?'✅':'❌'}</strong></div>
+        <div>Support: <strong>${fmt(sr.nearest_support)}</strong></div>
+        <div>Resistance: <strong>${fmt(sr.nearest_resistance)}</strong></div>
+        <div>Liq Above: <strong class="bull">${fmt(liq.buy_side_liquidity)}</strong></div>
+        <div>Liq Below: <strong class="bear">${fmt(liq.sell_side_liquidity)}</strong></div>
+        <div>Fib 0.618: <strong>${fmt(fib['0.618'])}</strong></div>
+        <div>Fib 0.382: <strong>${fmt(fib['0.382'])}</strong></div>
+        <div>OTE Zone: <strong>${JSON.stringify(fib.ote_zone||[])}</strong></div>
+      </div>
+    </div>
+    <div class="card"><div class="ctitle">BB Bands</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;font-size:.82rem;">
+        <div><div style="color:var(--muted)">Upper</div><div class="bear">${fmt(ind.bb_upper)}</div></div>
+        <div><div style="color:var(--muted)">Mid</div><div>${fmt(ind.bb_mid)}</div></div>
+        <div><div style="color:var(--muted)">Lower</div><div class="bull">${fmt(ind.bb_lower)}</div></div>
+      </div>
+    </div>
+    <div class="card"><div class="ctitle">Summary</div><div style="font-size:.85rem;line-height:1.6">${t.summary||'—'}</div></div>`;
+
+  // ── STRATEGIES TAB
+  const strats = t.strategies || [];
+  document.getElementById('strat-content').innerHTML = strats.length
+    ? strats.map(s2=>`<div class="si ${s2.bias==='bullish'?'bull-s':'bear-s'}">
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-weight:600">${s2.bias==='bullish'?'🟢':'🔴'} ${s2.name||'Strategy'}</span>
+          <span style="font-size:.72rem;padding:2px 8px;border-radius:20px;background:${s2.valid?'rgba(16,185,129,.15)':'rgba(239,68,68,.1)'};color:${s2.valid?'var(--green)':'var(--red)'}">${s2.valid?'Valid':'Invalid'}</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">Entry: <strong>${fmt(s2.entry)}</strong> SL: <strong>${fmt(s2.stop_loss)}</strong> TP: <strong>${fmt(s2.target)}</strong> RR: <strong>${s2.rr_ratio||'—'}x</strong></div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:4px">${s2.rationale||''}</div>
+      </div>`).join('')
+    : '<div style="color:var(--muted);font-size:.85rem">No strategies on current data.</div>';
+
+  // ── PATTERNS TAB
+  const cpats = t.candlestick_patterns || [];
+  const chpats = t.chart_patterns || [];
+  const allpats = [...cpats, ...chpats];
+  document.getElementById('pats-content').innerHTML = `
+    <div class="ctitle">🕯️ Detected Patterns (${allpats.length})</div>
+    ${allpats.length ? allpats.map(p=>`<div class="si ${p.bias==='bullish'?'bull-s':p.bias==='bearish'?'bear-s':''}">
+      <span style="font-weight:600">${p.bias==='bullish'?'🟢':p.bias==='bearish'?'🔴':'⚪'} ${(p.pattern||'').replace(/_/g,' ').toUpperCase()}</span>
+      ${p.level?` <span style="font-size:.78rem;color:var(--muted)">Level: ${fmt(p.level)}</span>`:''}
+      ${p.neckline?` <span style="font-size:.78rem;color:var(--muted)">Neckline: ${fmt(p.neckline)}</span>`:''}
+    </div>`).join('') : '<div style="color:var(--muted);font-size:.85rem">No patterns detected.</div>'}
+    <div class="card" style="margin-top:12px;"><div class="ctitle">Active Patterns (LLM)</div>
+    ${(t.active_patterns||[]).map(p=>`<div style="font-size:.85rem;margin:4px 0">• ${p}</div>`).join('')||'<div style="color:var(--muted);font-size:.85rem">None</div>'}
+    </div>`;
+
+  // ── FUNDAMENTAL TAB
+  document.getElementById('fund-content').innerHTML = `
+    <div class="ctitle">📋 Fundamental</div>
+    <div class="sgrid" style="margin-bottom:14px;">
+      ${[['PE Ratio',f.pe_ratio],['Mkt Cap B',f.market_cap_b],['52W Low',f['52w_low']],['52W High',f['52w_high']],
+         ['Beta',f.beta],['ROE',f.roe],['Rev Growth',f.revenue_growth],['Div Yield',f.dividend_yield]
+        ].map(([l,v])=>`<div class="sitem"><div style="font-size:.7rem;color:var(--muted)">${l}</div><div class="v neut">${v!=null?v:'—'}</div></div>`).join('')}
+    </div>
+    <div class="card"><div class="ctitle">Summary</div><div style="font-size:.85rem;line-height:1.6">${f.summary||'—'}</div></div>
+    <div class="card"><div class="ctitle">📰 News (${n.sources_used||0} sources)</div>
+      <div style="font-size:.85rem;line-height:1.6">${n.summary||'—'}</div>
+      <div style="margin-top:8px;font-size:.78rem;color:var(--muted)">${(n.key_events||[]).join(' · ')||'No key events'}</div>
+    </div>`;
+
+  // ── RISK TAB
+  document.getElementById('risk-content').innerHTML = `
+    <div class="ctitle">⚖️ Risk Management</div>
+    <div class="sgrid">
+      ${[['Go/No-Go',r.go?'GO':'NO-GO'],['Position',r.position_size],['Risk USD',r.risk_amount_usd],
+         ['Max Loss',r.max_loss_usd],['R:R',r.risk_reward],['Level',r.risk_level]
+        ].map(([l,v])=>`<div class="sitem"><div style="font-size:.7rem;color:var(--muted)">${l}</div><div class="v ${l==='Go/No-Go'?(r.go?'bull':'bear'):'neut'}">${v!=null?v:'—'}</div></div>`).join('')}
+    </div>
+    <div class="card" style="margin-top:12px;"><div class="ctitle">Recommendation</div><div style="font-size:.85rem">${r.recommendation||'—'}</div></div>
+    ${(r.warnings||[]).length?`<div class="card" style="border-left:3px solid var(--yellow)"><div class="ctitle">⚠️ Warnings</div>${r.warnings.map(w=>`<div style="font-size:.82rem;color:var(--yellow);margin:3px 0">• ${w}</div>`).join('')}</div>`:''}`;
+
+  // ── PROFIT TAB
+  const pp = t.profit_projection || {};
+  const n5 = t.next_5_candles || {};
+  document.getElementById('profit-content').innerHTML = `
+    <div class="ctitle">💰 Profit Projection (${pp.leverage||1}x)</div>
+    <div class="sgrid" style="margin-bottom:14px;">
+      ${[['Invest','$'+(pp.invest_usd||'—')],['Position','$'+(pp.position_size||'—')],
+         ['Qty',pp.qty||'—'],['Profit','$'+(pp.projected_profit_usd||'—')],
+         ['Max Loss','$'+(pp.projected_loss_usd||'—')],['ROI',(pp.roi_pct||'—')+'%'],
+         ['R:R',(pp.rr_ratio||'—')+'x'],['Leverage',(pp.leverage||1)+'x']
+        ].map(([l,v])=>`<div class="sitem"><div style="font-size:.7rem;color:var(--muted)">${l}</div><div class="v ${l==='Profit'?'bull':l==='Max Loss'?'bear':'neut'}">${v}</div></div>`).join('')}
+    </div>
+    <div class="card" style="border-left:3px solid var(--yellow)"><div style="font-size:.8rem;color:var(--yellow)">⚠️ Estimates only. Higher leverage = higher risk.</div></div>
+    <div class="card"><div class="ctitle">Next 5 Candles</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.85rem;">
+        <div>Direction: <strong class="${n5.prediction==='up'?'bull':n5.prediction==='down'?'bear':'neut'}">${n5.prediction==='up'?'⬆️ UP':n5.prediction==='down'?'⬇️ DOWN':'↔️ SIDEWAYS'}</strong></div>
+        <div>Move: <strong>${n5.expected_move_pct||'—'}%</strong></div>
+        <div>Watch: <strong>${fmt(n5.key_level_to_watch)}</strong></div>
+        <div>Conf: <strong>${Math.round((n5.confidence||0)*100)}%</strong></div>
+      </div>
+    </div>`;
+
+  // ── PLAN TAB
+  const tp = d.trade_plan || {};
+  document.getElementById('plan-content').innerHTML =
+    [['Before Entry',tp.before_entry],['Entry Trigger',tp.entry_trigger],
+     ['Management',tp.management],['Exit Plan',tp.exit_plan],['Invalidation',s.invalidation]
+    ].map(([l,v])=>`<div class="card"><div class="ctitle">${l}</div><div style="font-size:.85rem;line-height:1.6">${v||'—'}</div></div>`).join('');
+
+  document.getElementById('res').classList.remove('hidden');
+}
+
+async function loadHist() {
+  try {
+    const r = await fetch('/api/history?limit=8');
+    const j = await r.json();
+    const rows = j.data || [];
+    const el = document.getElementById('hist');
+    if (!rows.length) { el.innerHTML = '<div style="color:var(--muted);font-size:.85rem">No history yet.</div>'; return; }
+    el.innerHTML = rows.map(row => {
+      let res = {};
+      try { res = typeof row.result==='string' ? JSON.parse(row.result) : row.result; } catch(e){}
+      const act = res.decision?.action || '—';
+      const cf  = res.decision?.confidence ? Math.round(res.decision.confidence*100)+'%' : '—';
+      const cls = act==='BUY'?'bull':act==='SELL'?'bear':'neut';
+      return `<div class="hr">
+        <div><strong>${row.symbol}</strong> <span style="color:var(--muted)">${row.timeframe}·${row.trade_type}</span></div>
+        <div><span class="${cls}" style="font-weight:600">${act}</span> <span style="color:var(--muted)">${cf}</span></div>
+        <div style="color:var(--muted);font-size:.75rem">${new Date(row.created).toLocaleString()}</div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.warn('History error',e); }
+}
+
+window.onload = loadHist;
+</script>
+</body>
+</html>

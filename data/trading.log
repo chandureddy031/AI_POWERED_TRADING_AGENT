@@ -1,0 +1,531 @@
+2026-04-12 10:42:35 | INFO     | db | init_db:16 | Initialising database at data/trading.db
+2026-04-12 10:42:35 | INFO     | db | init_db:29 | DB ready
+2026-04-12 10:43:09 | INFO     | main | analyze:42 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '1h', 'trade_type': 'swing', 'account_size': 500.0, 'open_trades': 0, 'invest_amount': 50.0, 'leverage': 5.0}
+2026-04-12 10:43:09 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 10:43:09 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 1h swing invest=50.00 lev=5.0
+2026-04-12 10:43:09 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 10:43:09 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=1h
+2026-04-12 10:43:09 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=1h limit=300
+2026-04-12 10:43:10 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 10:43:10 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 10:43:10 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 10:43:10 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=swing
+2026-04-12 10:43:10 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-12 10:43:11 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-12 10:43:11 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-12 10:43:12 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-12 10:43:13 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-12 10:43:15 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-12 10:43:17 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-12 10:43:18 | INFO     | news_agent | run:107 | Total unique headlines: 19
+2026-04-12 10:43:19 | ERROR    | llm_client | llm_chat:41 | llm_chat error: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 36, in llm_chat
+    resp = await _client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\resources\chat\completions.py", line 1283, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1796, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1499, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1590, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+2026-04-12 10:43:19 | ERROR    | main | analyze:52 | Analysis failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\main.py", line 44, in analyze
+    result = await run_analysis(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\orchestrator.py", line 33, in run_analysis
+    id_res, news_res = await asyncio.gather(
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\agents\news_agent.py", line 127, in run
+    result = await llm_json(system, user)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 47, in llm_json
+    raw = await llm_chat(system, user, json_mode=True)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 36, in llm_chat
+    resp = await _client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\resources\chat\completions.py", line 1283, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1796, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1499, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1590, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+2026-04-12 10:43:19 | ERROR    | llm_client | llm_chat:41 | llm_chat error: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 36, in llm_chat
+    resp = await _client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\resources\chat\completions.py", line 1283, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1796, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1499, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1590, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+2026-04-12 10:44:51 | INFO     | db | init_db:16 | Initialising database at data/trading.db
+2026-04-12 10:44:51 | INFO     | db | init_db:29 | DB ready
+2026-04-12 10:44:55 | INFO     | db | init_db:16 | Initialising database at data/trading.db
+2026-04-12 10:44:55 | INFO     | db | init_db:29 | DB ready
+2026-04-12 10:45:04 | INFO     | main | analyze:42 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '1h', 'trade_type': 'swing', 'account_size': 500.0, 'open_trades': 0, 'invest_amount': 50.0, 'leverage': 5.0}
+2026-04-12 10:45:04 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 10:45:04 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 1h swing invest=50.00 lev=5.0
+2026-04-12 10:45:04 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 10:45:04 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=1h
+2026-04-12 10:45:04 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=1h limit=300
+2026-04-12 10:45:06 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 10:45:06 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 10:45:06 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 10:45:06 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=swing
+2026-04-12 10:45:06 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-12 10:45:07 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-12 10:45:07 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-12 10:45:09 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-12 10:45:10 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-12 10:45:11 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-12 10:45:14 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-12 10:45:15 | INFO     | news_agent | run:107 | Total unique headlines: 19
+2026-04-12 10:45:16 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 10:45:16 | INFO     | news_agent | run:129 | news_agent done | sentiment=bullish conf=0.70 sources=19
+2026-04-12 10:45:16 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 10:45:16 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=BTCUSDT asset_type=crypto
+2026-04-12 10:45:16 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for BTCUSDT
+2026-04-12 10:45:22 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (BTCUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 10:45:22 | INFO     | technical_agent | run:228 | technical_agent.run | BTCUSDT 1h swing invest=50.00 lev=5.0
+2026-04-12 10:45:23 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.00
+2026-04-12 10:45:24 | INFO     | technical_agent | run:270 | technical_agent done | signal=bearish conf=0.62
+2026-04-12 10:45:24 | INFO     | orchestrator | run_analysis:46 | Phase 4: strategy
+2026-04-12 10:45:24 | INFO     | strategy_agent | run:91 | strategy_agent.run | symbol=BTCUSDT tf=1h type=swing
+2026-04-12 10:45:24 | INFO     | strategy_agent | run:101 | Rule-based setups found: 0
+2026-04-12 10:45:24 | INFO     | strategy_agent | run:136 | strategy_agent result: setup=Short at Resistance conf=0.62
+2026-04-12 10:45:24 | INFO     | orchestrator | run_analysis:50 | Phase 5: risk
+2026-04-12 10:45:24 | INFO     | risk_agent | run:17 | risk_agent.run | symbol=BTCUSDT open_trades=0 account=500.00
+2026-04-12 10:45:24 | INFO     | risk_agent | run:37 | Risk hard rules: {'max_risk_ok': True, 'max_trades_ok': True, 'min_confidence_ok': True, 'no_hold_bias': True} → go=True
+2026-04-12 10:45:25 | INFO     | risk_agent | run:65 | risk_agent result: go=True size=0.0383
+2026-04-12 10:45:25 | INFO     | orchestrator | run_analysis:54 | Phase 6: decision
+2026-04-12 10:45:25 | INFO     | decision_agent | run:49 | decision_agent.run | symbol=BTCUSDT tf=1h type=swing
+2026-04-12 10:45:25 | INFO     | decision_agent | run:55 | Decision: action=HOLD confidence=0.4100
+2026-04-12 10:45:27 | INFO     | decision_agent | run:119 | decision_agent FINAL: action=HOLD confidence=0.4100
+2026-04-12 10:45:27 | INFO     | db | save_analysis:33 | Saving analysis for BTCUSDT 1h
+2026-04-12 10:45:27 | ERROR    | main | analyze:52 | Analysis failed: Object of type bool_ is not JSON serializable
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\main.py", line 44, in analyze
+    result = await run_analysis(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\orchestrator.py", line 63, in run_analysis
+    await save_analysis(symbol, timeframe, trade_type, full)
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\db.py", line 37, in save_analysis
+    (symbol, timeframe, trade_type, json.dumps(result))
+                                    ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type bool_ is not JSON serializable
+2026-04-12 10:47:01 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-12 10:47:01 | INFO     | db | init_db:23 | DB ready
+2026-04-12 10:47:08 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-12 10:47:08 | INFO     | db | init_db:23 | DB ready
+2026-04-12 10:47:20 | INFO     | main | analyze:42 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '5m', 'trade_type': 'swing', 'account_size': 1000.0, 'open_trades': 0, 'invest_amount': 100.0, 'leverage': 1.0}
+2026-04-12 10:47:20 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 10:47:20 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 5m swing invest=100.00 lev=1.0
+2026-04-12 10:47:20 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 10:47:20 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=5m
+2026-04-12 10:47:20 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=5m limit=300
+2026-04-12 10:47:21 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 10:47:21 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 10:47:21 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 10:47:21 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=swing
+2026-04-12 10:47:21 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-12 10:47:23 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-12 10:47:23 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-12 10:47:24 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-12 10:47:25 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-12 10:47:27 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-12 10:47:28 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-12 10:47:30 | INFO     | news_agent | run:107 | Total unique headlines: 19
+2026-04-12 10:47:30 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 10:47:30 | INFO     | news_agent | run:129 | news_agent done | sentiment=bullish conf=0.70 sources=19
+2026-04-12 10:47:30 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 10:47:30 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=BTCUSDT asset_type=crypto
+2026-04-12 10:47:30 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for BTCUSDT
+2026-04-12 10:47:36 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (BTCUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 10:47:36 | INFO     | technical_agent | run:228 | technical_agent.run | BTCUSDT 5m swing invest=100.00 lev=1.0
+2026-04-12 10:47:37 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.00
+2026-04-12 10:47:38 | INFO     | technical_agent | run:270 | technical_agent done | signal=bearish conf=0.62
+2026-04-12 10:47:38 | INFO     | orchestrator | run_analysis:46 | Phase 4: strategy
+2026-04-12 10:47:38 | INFO     | strategy_agent | run:91 | strategy_agent.run | symbol=BTCUSDT tf=5m type=swing
+2026-04-12 10:47:38 | INFO     | strategy_agent | run:101 | Rule-based setups found: 0
+2026-04-12 10:47:39 | INFO     | strategy_agent | run:136 | strategy_agent result: setup=Short at resistance conf=0.62
+2026-04-12 10:47:39 | INFO     | orchestrator | run_analysis:50 | Phase 5: risk
+2026-04-12 10:47:39 | INFO     | risk_agent | run:17 | risk_agent.run | symbol=BTCUSDT open_trades=0 account=1000.00
+2026-04-12 10:47:39 | INFO     | risk_agent | run:37 | Risk hard rules: {'max_risk_ok': True, 'max_trades_ok': True, 'min_confidence_ok': True, 'no_hold_bias': True} → go=True
+2026-04-12 10:47:39 | INFO     | risk_agent | run:65 | risk_agent result: go=True size=0.0599
+2026-04-12 10:47:39 | INFO     | orchestrator | run_analysis:54 | Phase 6: decision
+2026-04-12 10:47:39 | INFO     | decision_agent | run:49 | decision_agent.run | symbol=BTCUSDT tf=5m type=swing
+2026-04-12 10:47:39 | INFO     | decision_agent | run:55 | Decision: action=HOLD confidence=0.4100
+2026-04-12 10:47:41 | INFO     | decision_agent | run:119 | decision_agent FINAL: action=HOLD confidence=0.4100
+2026-04-12 10:47:41 | INFO     | db | save_analysis:26 | Saving analysis for BTCUSDT 5m
+2026-04-12 10:47:41 | INFO     | alerts | maybe_alert:64 | maybe_alert | confidence=0.41 threshold=0.65
+2026-04-12 10:47:41 | INFO     | alerts | maybe_alert:69 | Confidence below threshold – no alert sent
+2026-04-12 10:47:41 | INFO     | orchestrator | run_analysis:65 | DONE | action=HOLD conf=0.4100
+2026-04-12 10:49:36 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-12 10:49:36 | INFO     | db | init_db:23 | DB ready
+2026-04-12 10:49:44 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-12 10:49:44 | INFO     | db | init_db:23 | DB ready
+2026-04-12 10:50:07 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '5m', 'trade_type': 'swing', 'account_size': 1000.0, 'open_trades': 0, 'invest_amount': 100.0, 'leverage': 1.0}
+2026-04-12 10:50:07 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 10:50:07 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 5m swing invest=100.00 lev=1.0
+2026-04-12 10:50:07 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 10:50:07 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=5m
+2026-04-12 10:50:07 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=5m limit=300
+2026-04-12 10:50:09 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 10:50:09 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 10:50:09 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 10:50:09 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=swing
+2026-04-12 10:50:09 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-12 10:50:09 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-12 10:50:09 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-12 10:50:10 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-12 10:50:11 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-12 10:50:13 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-12 10:50:16 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-12 10:50:17 | INFO     | news_agent | run:107 | Total unique headlines: 19
+2026-04-12 10:50:17 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 10:50:17 | INFO     | news_agent | run:129 | news_agent done | sentiment=bullish conf=0.70 sources=19
+2026-04-12 10:50:17 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 10:50:17 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=BTCUSDT asset_type=crypto
+2026-04-12 10:50:17 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for BTCUSDT
+2026-04-12 10:50:23 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (BTCUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 10:50:23 | INFO     | technical_agent | run:228 | technical_agent.run | BTCUSDT 5m swing invest=100.00 lev=1.0
+2026-04-12 10:50:24 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.00
+2026-04-12 10:50:25 | INFO     | technical_agent | run:270 | technical_agent done | signal=bearish conf=0.62
+2026-04-12 10:50:25 | INFO     | orchestrator | run_analysis:46 | Phase 4: strategy
+2026-04-12 10:50:25 | INFO     | strategy_agent | run:91 | strategy_agent.run | symbol=BTCUSDT tf=5m type=swing
+2026-04-12 10:50:25 | INFO     | strategy_agent | run:101 | Rule-based setups found: 0
+2026-04-12 10:50:26 | INFO     | strategy_agent | run:136 | strategy_agent result: setup=Short at resistance conf=0.62
+2026-04-12 10:50:26 | INFO     | orchestrator | run_analysis:50 | Phase 5: risk
+2026-04-12 10:50:26 | INFO     | risk_agent | run:17 | risk_agent.run | symbol=BTCUSDT open_trades=0 account=1000.00
+2026-04-12 10:50:26 | INFO     | risk_agent | run:37 | Risk hard rules: {'max_risk_ok': True, 'max_trades_ok': True, 'min_confidence_ok': True, 'no_hold_bias': True} → go=True
+2026-04-12 10:50:26 | INFO     | risk_agent | run:65 | risk_agent result: go=True size=0.1369
+2026-04-12 10:50:26 | INFO     | orchestrator | run_analysis:54 | Phase 6: decision
+2026-04-12 10:50:26 | INFO     | decision_agent | run:49 | decision_agent.run | symbol=BTCUSDT tf=5m type=swing
+2026-04-12 10:50:26 | INFO     | decision_agent | run:55 | Decision: action=HOLD confidence=0.4100
+2026-04-12 10:50:28 | INFO     | decision_agent | run:119 | decision_agent FINAL: action=HOLD confidence=0.4100
+2026-04-12 10:50:28 | INFO     | db | save_analysis:26 | Saving analysis for BTCUSDT 5m
+2026-04-12 10:50:28 | INFO     | alerts | maybe_alert:64 | maybe_alert | confidence=0.41 threshold=0.65
+2026-04-12 10:50:28 | INFO     | alerts | maybe_alert:69 | Confidence below threshold – no alert sent
+2026-04-12 10:50:28 | INFO     | orchestrator | run_analysis:65 | DONE | action=HOLD conf=0.4100
+2026-04-12 10:50:45 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '5m', 'trade_type': 'swing', 'account_size': 1000.0, 'open_trades': 0, 'invest_amount': 100.0, 'leverage': 1.0}
+2026-04-12 10:50:45 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 10:50:45 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 5m swing invest=100.00 lev=1.0
+2026-04-12 10:50:45 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 10:50:45 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=5m
+2026-04-12 10:50:45 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=5m limit=300
+2026-04-12 10:50:47 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 10:50:47 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 10:50:47 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 10:50:47 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=swing
+2026-04-12 10:50:47 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-12 10:50:48 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-12 10:50:48 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-12 10:50:50 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-12 10:50:51 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-12 10:50:54 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-12 10:50:58 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-12 10:51:00 | INFO     | news_agent | run:107 | Total unique headlines: 19
+2026-04-12 10:51:00 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 10:51:00 | INFO     | news_agent | run:129 | news_agent done | sentiment=bullish conf=0.70 sources=19
+2026-04-12 10:51:00 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 10:51:00 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=BTCUSDT asset_type=crypto
+2026-04-12 10:51:00 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for BTCUSDT
+2026-04-12 10:51:06 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (BTCUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 10:51:06 | INFO     | technical_agent | run:228 | technical_agent.run | BTCUSDT 5m swing invest=100.00 lev=1.0
+2026-04-12 10:51:07 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.00
+2026-04-12 10:51:08 | INFO     | technical_agent | run:270 | technical_agent done | signal=bearish conf=0.62
+2026-04-12 10:51:08 | INFO     | orchestrator | run_analysis:46 | Phase 4: strategy
+2026-04-12 10:51:08 | INFO     | strategy_agent | run:91 | strategy_agent.run | symbol=BTCUSDT tf=5m type=swing
+2026-04-12 10:51:08 | INFO     | strategy_agent | run:101 | Rule-based setups found: 0
+2026-04-12 10:51:09 | INFO     | strategy_agent | run:136 | strategy_agent result: setup=Short conf=0.62
+2026-04-12 10:51:09 | INFO     | orchestrator | run_analysis:50 | Phase 5: risk
+2026-04-12 10:51:09 | INFO     | risk_agent | run:17 | risk_agent.run | symbol=BTCUSDT open_trades=0 account=1000.00
+2026-04-12 10:51:09 | INFO     | risk_agent | run:37 | Risk hard rules: {'max_risk_ok': True, 'max_trades_ok': True, 'min_confidence_ok': True, 'no_hold_bias': True} → go=True
+2026-04-12 10:51:10 | INFO     | risk_agent | run:65 | risk_agent result: go=True size=0.0426
+2026-04-12 10:51:10 | INFO     | orchestrator | run_analysis:54 | Phase 6: decision
+2026-04-12 10:51:10 | INFO     | decision_agent | run:49 | decision_agent.run | symbol=BTCUSDT tf=5m type=swing
+2026-04-12 10:51:10 | INFO     | decision_agent | run:55 | Decision: action=HOLD confidence=0.4100
+2026-04-12 10:51:11 | INFO     | decision_agent | run:119 | decision_agent FINAL: action=HOLD confidence=0.4100
+2026-04-12 10:51:11 | INFO     | db | save_analysis:26 | Saving analysis for BTCUSDT 5m
+2026-04-12 10:51:11 | INFO     | alerts | maybe_alert:64 | maybe_alert | confidence=0.41 threshold=0.65
+2026-04-12 10:51:11 | INFO     | alerts | maybe_alert:69 | Confidence below threshold – no alert sent
+2026-04-12 10:51:11 | INFO     | orchestrator | run_analysis:65 | DONE | action=HOLD conf=0.4100
+2026-04-12 10:53:06 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '5m', 'trade_type': 'swing', 'account_size': 100.0, 'open_trades': 0, 'invest_amount': 100.0, 'leverage': 10.0}
+2026-04-12 10:53:06 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 10:53:06 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 5m swing invest=100.00 lev=10.0
+2026-04-12 10:53:06 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 10:53:06 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=5m
+2026-04-12 10:53:06 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=5m limit=300
+2026-04-12 10:53:07 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 10:53:07 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 10:53:07 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 10:53:07 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=swing
+2026-04-12 10:53:07 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-12 10:53:09 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-12 10:53:09 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-12 10:53:10 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-12 10:53:11 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-12 10:53:13 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-12 10:53:19 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-12 10:53:20 | INFO     | news_agent | run:107 | Total unique headlines: 19
+2026-04-12 10:53:20 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 10:53:20 | INFO     | news_agent | run:129 | news_agent done | sentiment=bullish conf=0.70 sources=19
+2026-04-12 10:53:20 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 10:53:20 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=BTCUSDT asset_type=crypto
+2026-04-12 10:53:20 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for BTCUSDT
+2026-04-12 10:53:24 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (BTCUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 10:53:24 | INFO     | technical_agent | run:228 | technical_agent.run | BTCUSDT 5m swing invest=100.00 lev=10.0
+2026-04-12 10:53:25 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.00
+2026-04-12 10:53:26 | INFO     | technical_agent | run:270 | technical_agent done | signal=bearish conf=0.62
+2026-04-12 10:53:26 | INFO     | orchestrator | run_analysis:46 | Phase 4: strategy
+2026-04-12 10:53:26 | INFO     | strategy_agent | run:91 | strategy_agent.run | symbol=BTCUSDT tf=5m type=swing
+2026-04-12 10:53:26 | INFO     | strategy_agent | run:101 | Rule-based setups found: 0
+2026-04-12 10:53:27 | INFO     | strategy_agent | run:136 | strategy_agent result: setup=Short at resistance conf=0.62
+2026-04-12 10:53:27 | INFO     | orchestrator | run_analysis:50 | Phase 5: risk
+2026-04-12 10:53:27 | INFO     | risk_agent | run:17 | risk_agent.run | symbol=BTCUSDT open_trades=0 account=100.00
+2026-04-12 10:53:27 | INFO     | risk_agent | run:37 | Risk hard rules: {'max_risk_ok': True, 'max_trades_ok': True, 'min_confidence_ok': True, 'no_hold_bias': True} → go=True
+2026-04-12 10:53:27 | INFO     | risk_agent | run:65 | risk_agent result: go=True size=0.0083
+2026-04-12 10:53:27 | INFO     | orchestrator | run_analysis:54 | Phase 6: decision
+2026-04-12 10:53:27 | INFO     | decision_agent | run:49 | decision_agent.run | symbol=BTCUSDT tf=5m type=swing
+2026-04-12 10:53:27 | INFO     | decision_agent | run:55 | Decision: action=HOLD confidence=0.4100
+2026-04-12 10:53:29 | INFO     | decision_agent | run:119 | decision_agent FINAL: action=HOLD confidence=0.4100
+2026-04-12 10:53:29 | INFO     | db | save_analysis:26 | Saving analysis for BTCUSDT 5m
+2026-04-12 10:53:29 | INFO     | alerts | maybe_alert:64 | maybe_alert | confidence=0.41 threshold=0.65
+2026-04-12 10:53:29 | INFO     | alerts | maybe_alert:69 | Confidence below threshold – no alert sent
+2026-04-12 10:53:29 | INFO     | orchestrator | run_analysis:65 | DONE | action=HOLD conf=0.4100
+2026-04-12 10:57:24 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-12 10:57:24 | INFO     | db | init_db:23 | DB ready
+2026-04-12 10:57:41 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '5m', 'trade_type': 'scalping', 'account_size': 100.0, 'open_trades': 0, 'invest_amount': 100.0, 'leverage': 20.0}
+2026-04-12 10:57:41 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 10:57:41 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 5m scalping invest=100.00 lev=20.0
+2026-04-12 10:57:41 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 10:57:41 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=5m
+2026-04-12 10:57:41 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=5m limit=300
+2026-04-12 10:57:43 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 10:57:43 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 10:57:43 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 10:57:43 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=scalping
+2026-04-12 10:57:43 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-12 10:57:45 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-12 10:57:45 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-12 10:57:46 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-12 10:57:48 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-12 10:57:50 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-12 10:57:52 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-12 10:57:54 | INFO     | news_agent | run:107 | Total unique headlines: 19
+2026-04-12 10:57:55 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 10:57:55 | INFO     | news_agent | run:129 | news_agent done | sentiment=bullish conf=0.70 sources=19
+2026-04-12 10:57:55 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 10:57:55 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=BTCUSDT asset_type=crypto
+2026-04-12 10:57:55 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for BTCUSDT
+2026-04-12 10:58:14 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (BTCUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 10:58:14 | INFO     | technical_agent | run:228 | technical_agent.run | BTCUSDT 5m scalping invest=100.00 lev=20.0
+2026-04-12 10:58:15 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.00
+2026-04-12 10:58:16 | INFO     | technical_agent | run:270 | technical_agent done | signal=bearish conf=0.62
+2026-04-12 10:58:16 | INFO     | orchestrator | run_analysis:46 | Phase 4: strategy
+2026-04-12 10:58:16 | INFO     | strategy_agent | run:91 | strategy_agent.run | symbol=BTCUSDT tf=5m type=scalping
+2026-04-12 10:58:16 | INFO     | strategy_agent | run:101 | Rule-based setups found: 0
+2026-04-12 10:58:16 | INFO     | strategy_agent | run:136 | strategy_agent result: setup=Short conf=0.62
+2026-04-12 10:58:16 | INFO     | orchestrator | run_analysis:50 | Phase 5: risk
+2026-04-12 10:58:16 | INFO     | risk_agent | run:17 | risk_agent.run | symbol=BTCUSDT open_trades=0 account=100.00
+2026-04-12 10:58:16 | INFO     | risk_agent | run:37 | Risk hard rules: {'max_risk_ok': True, 'max_trades_ok': True, 'min_confidence_ok': True, 'no_hold_bias': True} → go=True
+2026-04-12 10:58:17 | INFO     | risk_agent | run:65 | risk_agent result: go=True size=0.0059
+2026-04-12 10:58:17 | INFO     | orchestrator | run_analysis:54 | Phase 6: decision
+2026-04-12 10:58:17 | INFO     | decision_agent | run:49 | decision_agent.run | symbol=BTCUSDT tf=5m type=scalping
+2026-04-12 10:58:17 | INFO     | decision_agent | run:55 | Decision: action=HOLD confidence=0.4100
+2026-04-12 10:58:18 | INFO     | decision_agent | run:119 | decision_agent FINAL: action=HOLD confidence=0.4100
+2026-04-12 10:58:18 | INFO     | db | save_analysis:26 | Saving analysis for BTCUSDT 5m
+2026-04-12 10:58:18 | INFO     | alerts | maybe_alert:64 | maybe_alert | confidence=0.41 threshold=0.65
+2026-04-12 10:58:18 | INFO     | alerts | maybe_alert:69 | Confidence below threshold – no alert sent
+2026-04-12 10:58:18 | INFO     | orchestrator | run_analysis:65 | DONE | action=HOLD conf=0.4100
+2026-04-12 10:59:04 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'DOGEUSDT', 'timeframe': '5m', 'trade_type': 'intraday', 'account_size': 100.0, 'open_trades': 0, 'invest_amount': 100.0, 'leverage': 20.0}
+2026-04-12 10:59:04 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 10:59:04 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | DOGEUSDT 5m intraday invest=100.00 lev=20.0
+2026-04-12 10:59:04 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 10:59:04 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=DOGEUSDT timeframe=5m
+2026-04-12 10:59:04 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=DOGEUSDT tf=5m limit=300
+2026-04-12 10:59:05 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 10:59:05 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 10:59:05 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 10:59:05 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=DOGEUSDT trade_type=intraday
+2026-04-12 10:59:05 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for DOGEUSDT
+2026-04-12 10:59:07 | INFO     | news_agent | run:88 | news_agent.run | symbol=DOGEUSDT
+2026-04-12 10:59:07 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=DOGEUSDT
+2026-04-12 10:59:08 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | DOGEUSDT
+2026-04-12 10:59:09 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | DOGEUSDT
+2026-04-12 10:59:11 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | DOGEUSDT
+2026-04-12 10:59:14 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=DOGE crypto news
+2026-04-12 10:59:15 | INFO     | news_agent | run:107 | Total unique headlines: 20
+2026-04-12 10:59:16 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 10:59:16 | INFO     | news_agent | run:129 | news_agent done | sentiment=neutral conf=0.60 sources=20
+2026-04-12 10:59:16 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 10:59:16 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=DOGEUSDT asset_type=crypto
+2026-04-12 10:59:16 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for DOGEUSDT
+2026-04-12 10:59:23 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (DOGEUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 10:59:23 | INFO     | technical_agent | run:228 | technical_agent.run | DOGEUSDT 5m intraday invest=100.00 lev=20.0
+2026-04-12 10:59:24 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.20
+2026-04-12 10:59:25 | INFO     | technical_agent | run:270 | technical_agent done | signal=bullish conf=0.62
+2026-04-12 10:59:25 | INFO     | orchestrator | run_analysis:46 | Phase 4: strategy
+2026-04-12 10:59:25 | INFO     | strategy_agent | run:91 | strategy_agent.run | symbol=DOGEUSDT tf=5m type=intraday
+2026-04-12 10:59:25 | INFO     | strategy_agent | run:101 | Rule-based setups found: 0
+2026-04-12 10:59:26 | INFO     | strategy_agent | run:136 | strategy_agent result: setup=Mean Reversion conf=0.62
+2026-04-12 10:59:26 | INFO     | orchestrator | run_analysis:50 | Phase 5: risk
+2026-04-12 10:59:26 | INFO     | risk_agent | run:17 | risk_agent.run | symbol=DOGEUSDT open_trades=0 account=100.00
+2026-04-12 10:59:26 | INFO     | risk_agent | run:37 | Risk hard rules: {'max_risk_ok': True, 'max_trades_ok': True, 'min_confidence_ok': True, 'no_hold_bias': True} → go=True
+2026-04-12 10:59:26 | INFO     | risk_agent | run:65 | risk_agent result: go=True size=5714.2857
+2026-04-12 10:59:26 | INFO     | orchestrator | run_analysis:54 | Phase 6: decision
+2026-04-12 10:59:26 | INFO     | decision_agent | run:49 | decision_agent.run | symbol=DOGEUSDT tf=5m type=intraday
+2026-04-12 10:59:26 | INFO     | decision_agent | run:55 | Decision: action=HOLD confidence=0.5510
+2026-04-12 10:59:28 | INFO     | decision_agent | run:119 | decision_agent FINAL: action=HOLD confidence=0.5510
+2026-04-12 10:59:28 | INFO     | db | save_analysis:26 | Saving analysis for DOGEUSDT 5m
+2026-04-12 10:59:28 | INFO     | alerts | maybe_alert:64 | maybe_alert | confidence=0.55 threshold=0.65
+2026-04-12 10:59:28 | INFO     | alerts | maybe_alert:69 | Confidence below threshold – no alert sent
+2026-04-12 10:59:28 | INFO     | orchestrator | run_analysis:65 | DONE | action=HOLD conf=0.5510
+2026-04-12 11:01:23 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'XRPUSDT', 'timeframe': '5m', 'trade_type': 'intraday', 'account_size': 100.0, 'open_trades': 0, 'invest_amount': 100.0, 'leverage': 20.0}
+2026-04-12 11:01:23 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 11:01:23 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | XRPUSDT 5m intraday invest=100.00 lev=20.0
+2026-04-12 11:01:23 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 11:01:23 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=XRPUSDT timeframe=5m
+2026-04-12 11:01:23 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=XRPUSDT tf=5m limit=300
+2026-04-12 11:01:24 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 11:01:24 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 11:01:24 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 11:01:24 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=XRPUSDT trade_type=intraday
+2026-04-12 11:01:24 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for XRPUSDT
+2026-04-12 11:01:26 | INFO     | news_agent | run:88 | news_agent.run | symbol=XRPUSDT
+2026-04-12 11:01:26 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=XRPUSDT
+2026-04-12 11:01:27 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | XRPUSDT
+2026-04-12 11:01:29 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | XRPUSDT
+2026-04-12 11:01:31 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | XRPUSDT
+2026-04-12 11:01:34 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=XRP crypto news
+2026-04-12 11:01:35 | INFO     | news_agent | run:107 | Total unique headlines: 27
+2026-04-12 11:01:35 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 11:01:36 | INFO     | news_agent | run:129 | news_agent done | sentiment=bullish conf=0.70 sources=27
+2026-04-12 11:01:36 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 11:01:36 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=XRPUSDT asset_type=crypto
+2026-04-12 11:01:36 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for XRPUSDT
+2026-04-12 11:01:41 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (XRPUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 11:01:41 | INFO     | technical_agent | run:228 | technical_agent.run | XRPUSDT 5m intraday invest=100.00 lev=20.0
+2026-04-12 11:01:43 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.20
+2026-04-12 11:01:43 | INFO     | technical_agent | run:270 | technical_agent done | signal=bullish conf=0.62
+2026-04-12 11:01:43 | INFO     | orchestrator | run_analysis:46 | Phase 4: strategy
+2026-04-12 11:01:43 | INFO     | strategy_agent | run:91 | strategy_agent.run | symbol=XRPUSDT tf=5m type=intraday
+2026-04-12 11:01:43 | INFO     | strategy_agent | run:101 | Rule-based setups found: 0
+2026-04-12 11:01:44 | INFO     | strategy_agent | run:136 | strategy_agent result: setup=Long at obs conf=0.62
+2026-04-12 11:01:44 | INFO     | orchestrator | run_analysis:50 | Phase 5: risk
+2026-04-12 11:01:44 | INFO     | risk_agent | run:17 | risk_agent.run | symbol=XRPUSDT open_trades=0 account=100.00
+2026-04-12 11:01:44 | INFO     | risk_agent | run:37 | Risk hard rules: {'max_risk_ok': True, 'max_trades_ok': True, 'min_confidence_ok': True, 'no_hold_bias': True} → go=True
+2026-04-12 11:01:44 | INFO     | risk_agent | run:65 | risk_agent result: go=True size=740.7407
+2026-04-12 11:01:44 | INFO     | orchestrator | run_analysis:54 | Phase 6: decision
+2026-04-12 11:01:44 | INFO     | decision_agent | run:49 | decision_agent.run | symbol=XRPUSDT tf=5m type=intraday
+2026-04-12 11:01:44 | INFO     | decision_agent | run:55 | Decision: action=BUY confidence=0.6110
+2026-04-12 11:01:46 | INFO     | decision_agent | run:119 | decision_agent FINAL: action=BUY confidence=0.6110
+2026-04-12 11:01:46 | INFO     | db | save_analysis:26 | Saving analysis for XRPUSDT 5m
+2026-04-12 11:01:46 | INFO     | alerts | maybe_alert:64 | maybe_alert | confidence=0.61 threshold=0.65
+2026-04-12 11:01:46 | INFO     | alerts | maybe_alert:69 | Confidence below threshold – no alert sent
+2026-04-12 11:01:46 | INFO     | orchestrator | run_analysis:65 | DONE | action=BUY conf=0.6110
+2026-04-12 11:11:03 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '1m', 'trade_type': 'swing', 'account_size': 10000.0, 'open_trades': 0, 'invest_amount': 1000.0, 'leverage': 1.0}
+2026-04-12 11:11:03 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 11:11:03 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 1m swing invest=1000.00 lev=1.0
+2026-04-12 11:11:03 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 11:11:03 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=1m
+2026-04-12 11:11:03 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=1m limit=300
+2026-04-12 11:11:04 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 11:11:04 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 11:11:04 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 11:11:04 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=swing
+2026-04-12 11:11:04 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-12 11:11:05 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-12 11:11:05 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-12 11:11:06 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-12 11:11:07 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-12 11:11:09 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-12 11:11:10 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-12 11:11:11 | INFO     | news_agent | run:107 | Total unique headlines: 19
+2026-04-12 11:11:12 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 11:11:12 | INFO     | news_agent | run:129 | news_agent done | sentiment=bullish conf=0.70 sources=19
+2026-04-12 11:11:12 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 11:11:12 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=BTCUSDT asset_type=crypto
+2026-04-12 11:11:12 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for BTCUSDT
+2026-04-12 11:11:16 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (BTCUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 11:11:16 | INFO     | technical_agent | run:228 | technical_agent.run | BTCUSDT 1m swing invest=1000.00 lev=1.0
+2026-04-12 11:11:17 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.00
+2026-04-12 11:11:18 | INFO     | technical_agent | run:270 | technical_agent done | signal=bullish conf=0.62
+2026-04-12 11:11:18 | INFO     | orchestrator | run_analysis:46 | Phase 4: strategy
+2026-04-12 11:11:18 | INFO     | strategy_agent | run:91 | strategy_agent.run | symbol=BTCUSDT tf=1m type=swing
+2026-04-12 11:11:18 | INFO     | strategy_agent | run:101 | Rule-based setups found: 0
+2026-04-12 11:11:19 | INFO     | strategy_agent | run:136 | strategy_agent result: setup=Bullish OB Breakout conf=0.62
+2026-04-12 11:11:19 | INFO     | orchestrator | run_analysis:50 | Phase 5: risk
+2026-04-12 11:11:19 | INFO     | risk_agent | run:17 | risk_agent.run | symbol=BTCUSDT open_trades=0 account=10000.00
+2026-04-12 11:11:19 | INFO     | risk_agent | run:37 | Risk hard rules: {'max_risk_ok': True, 'max_trades_ok': True, 'min_confidence_ok': True, 'no_hold_bias': True} → go=True
+2026-04-12 11:11:19 | INFO     | risk_agent | run:65 | risk_agent result: go=True size=4.8924
+2026-04-12 11:11:19 | INFO     | orchestrator | run_analysis:54 | Phase 6: decision
+2026-04-12 11:11:19 | INFO     | decision_agent | run:49 | decision_agent.run | symbol=BTCUSDT tf=1m type=swing
+2026-04-12 11:11:19 | INFO     | decision_agent | run:55 | Decision: action=HOLD confidence=0.5960
+2026-04-12 11:11:20 | INFO     | decision_agent | run:119 | decision_agent FINAL: action=HOLD confidence=0.5960
+2026-04-12 11:11:20 | INFO     | db | save_analysis:26 | Saving analysis for BTCUSDT 1m
+2026-04-12 11:11:21 | INFO     | alerts | maybe_alert:64 | maybe_alert | confidence=0.60 threshold=0.65
+2026-04-12 11:11:21 | INFO     | alerts | maybe_alert:69 | Confidence below threshold – no alert sent
+2026-04-12 11:11:21 | INFO     | orchestrator | run_analysis:65 | DONE | action=HOLD conf=0.5960
+2026-04-12 11:11:53 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '1h', 'trade_type': 'swing', 'account_size': 10000.0, 'open_trades': 0, 'invest_amount': 1000.0, 'leverage': 1.0}
+2026-04-12 11:11:53 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-12 11:11:53 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 1h swing invest=1000.00 lev=1.0
+2026-04-12 11:11:53 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-12 11:11:53 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=1h
+2026-04-12 11:11:53 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=1h limit=300
+2026-04-12 11:11:54 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-12 11:11:54 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-12 11:11:54 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-12 11:11:54 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=swing
+2026-04-12 11:11:54 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-12 11:11:55 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-12 11:11:55 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-12 11:11:56 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-12 11:11:57 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-12 11:11:58 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-12 11:12:02 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-12 11:12:03 | INFO     | news_agent | run:107 | Total unique headlines: 19
+2026-04-12 11:12:03 | INFO     | identifier_agent | run:78 | identifier_agent result: validation=valid
+2026-04-12 11:12:03 | INFO     | news_agent | run:129 | news_agent done | sentiment=bullish conf=0.70 sources=19
+2026-04-12 11:12:03 | INFO     | orchestrator | run_analysis:39 | Phase 3: fundamental + technical
+2026-04-12 11:12:03 | INFO     | fundamental_agent | run:38 | fundamental_agent.run | symbol=BTCUSDT asset_type=crypto
+2026-04-12 11:12:03 | INFO     | fundamental_agent | _fetch_fundamentals:15 | Fetching fundamentals for BTCUSDT
+2026-04-12 11:12:06 | WARNING  | fundamental_agent | _fetch_fundamentals:29 | yfinance fundamentals failed (BTCUSDT): Expecting value: line 1 column 1 (char 0)
+2026-04-12 11:12:06 | INFO     | technical_agent | run:228 | technical_agent.run | BTCUSDT 1h swing invest=1000.00 lev=1.0
+2026-04-12 11:12:06 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.00
+2026-04-12 11:12:19 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-12 11:12:19 | INFO     | db | init_db:23 | DB ready
