@@ -11,24 +11,14 @@ Multi-agent trading decision support system using Groq LLM, Yahoo Finance, Binan
 =======
 A real-world agentic AI system that analyses stocks and crypto using 8 specialized AI agents working together — and tells you whether to BUY, SELL, or HOLD.
 
-## 📸 Screenshots We are 
-## 📸 Screenshots
+## Screenshots
 
-<p align="center">
-  <img src="./ings/Screenshot 2026-04-13 183829.png" width="45%" />
-  <img src="./ings/Screenshot 2026-04-13 185049.png" width="45%" />
-</p>
-
-<p align="center">
-  <img src="./ings/Screenshot 2026-04-13 185110.png" width="45%" />
-  <img src="./ings/Screenshot 2026-04-13 185117.png" width="45%" />
-</p>
-
-<p align="center">
-  <img src="./ings/Screenshot 2026-04-13 185131.png" width="45%" />
-  <img src="./ings/Screenshot 2026-04-13 185137.png" width="45%" />
-</p>
-
+![Screenshot 1](imgs/s1.png)
+![Screenshot 2](imgs/s2.png)
+![Screenshot 3](imgs/s3.png)
+![Screenshot 4](imgs/s4.png)
+![Screenshot 5](imgs/s5.png)
+![Screenshot 6](imgs/s6.png)
 ## 🧠 What Is This?
 
 Most trading tools give you one signal from one algorithm. This system uses **8 AI agents**, each doing one specific job, and then combines their findings to make a final decision — just like a team of analysts working together.
