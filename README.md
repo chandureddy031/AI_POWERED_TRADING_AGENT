@@ -13,18 +13,18 @@ A real-world agentic AI system that analyses stocks and crypto using 8 specializ
 
 ## 📸 Screenshots We are 
 <p align="center">
-  <img src="./ings/Screenshot 2026-04-13 183829.png" width="45%" />
-  <img src="./ings/Screenshot 2026-04-13 185049.png" width="45%" />
+  <img src="sam_Alt\imgs\Screenshot 2026-04-13 183829.png" width="45%" />
+  <img src="sam_Alt\imgs\Screenshot 2026-04-13 185110.png" />
 </p>
 
 <p align="center">
-  <img src="./ings/Screenshot 2026-04-13 185110.png" width="45%" />
-  <img src="./ings/Screenshot 2026-04-13 185117.png" width="45%" />
+  <img src="sam_Alt\imgs\Screenshot 2026-04-13 185049.png" width="45%" />
+  <img src="sam_Alt\imgs\Screenshot 2026-04-13 185117.png" />
 </p>
 
 <p align="center">
-  <img src="./ings/Screenshot 2026-04-13 185131.png" width="45%" />
-  <img src="./ings/Screenshot 2026-04-13 185137.png" width="45%" />
+  <img src="sam_Alt\imgs\Screenshot 2026-04-13 185131.png" width="45%" />
+  <img src="sam_Alt\imgs\Screenshot 2026-04-13 185137.png" />
 </p>
 
 ## 🧠 What Is This?
