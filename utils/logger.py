@@ -1,7 +1,4 @@
-"""
-utils/logger.py
-Central logging factory used by every agent and utility.
-"""
+
 import logging
 import os
 from config import LOG_LEVEL, LOG_FILE

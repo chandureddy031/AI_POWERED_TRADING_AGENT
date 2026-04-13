@@ -529,3 +529,407 @@ TypeError: Object of type bool_ is not JSON serializable
 2026-04-12 11:12:06 | INFO     | fundamental_agent | run:69 | fundamental_agent result: signal=neutral conf=0.00
 2026-04-12 11:12:19 | INFO     | db | init_db:17 | Initialising database at data/trading.db
 2026-04-12 11:12:19 | INFO     | db | init_db:23 | DB ready
+2026-04-12 14:30:04 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-12 14:30:04 | INFO     | db | init_db:23 | DB ready
+2026-04-13 18:37:59 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-13 18:37:59 | INFO     | db | init_db:23 | DB ready
+2026-04-13 18:39:06 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '5m', 'trade_type': 'intraday', 'account_size': 1000.0, 'open_trades': 0, 'invest_amount': 100.0, 'leverage': 20.0}
+2026-04-13 18:39:06 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-13 18:39:06 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 5m intraday invest=100.00 lev=20.0
+2026-04-13 18:39:06 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-13 18:39:06 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=5m
+2026-04-13 18:39:06 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=5m limit=300
+2026-04-13 18:39:08 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-13 18:39:08 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-13 18:39:08 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-13 18:39:08 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=intraday
+2026-04-13 18:39:08 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-13 18:39:09 | WARNING  | identifier_agent | _search_news_events:34 | Historical news fetch failed: 401 Client Error: Unauthorized for url: https://newsapi.org/v2/everything?q=BTCUSDT+market+crash+OR+rally+OR+major+event&sortBy=relevancy&pageSize=5&apiKey=&language=en
+2026-04-13 18:39:10 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-13 18:39:10 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-13 18:39:10 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-13 18:39:11 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-13 18:39:13 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-13 18:39:16 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-13 18:39:17 | INFO     | news_agent | run:107 | Total unique headlines: 0
+2026-04-13 18:39:21 | ERROR    | llm_client | llm_chat:38 | llm_chat error: Connection error.
+Traceback (most recent call last):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 72, in map_httpcore_exceptions
+    yield
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 377, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection.py", line 103, in handle_async_request
+    return await self._connection.handle_async_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 136, in handle_async_request
+    raise exc
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 86, in handle_async_request
+    await self._send_request_headers(**kwargs)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 144, in _send_request_headers
+    with map_exceptions({h11.LocalProtocolError: LocalProtocolError}):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1528, in _request
+    response = await self._client.send(
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1674, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1702, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1739, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1776, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 376, in handle_async_request
+    with map_httpcore_exceptions():
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 89, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 33, in llm_chat
+    resp = await _client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\resources\chat\completions.py", line 1283, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1796, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1499, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1552, in _request
+    return await self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1621, in _retry_request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1552, in _request
+    return await self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1621, in _retry_request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1562, in _request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+2026-04-13 18:39:21 | ERROR    | main | analyze:61 | Analysis failed: Connection error.
+Traceback (most recent call last):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 72, in map_httpcore_exceptions
+    yield
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 377, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection.py", line 103, in handle_async_request
+    return await self._connection.handle_async_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 136, in handle_async_request
+    raise exc
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 86, in handle_async_request
+    await self._send_request_headers(**kwargs)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 144, in _send_request_headers
+    with map_exceptions({h11.LocalProtocolError: LocalProtocolError}):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1528, in _request
+    response = await self._client.send(
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1674, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1702, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1739, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1776, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 376, in handle_async_request
+    with map_httpcore_exceptions():
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 89, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\main.py", line 53, in analyze
+    result = await run_analysis(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\orchestrator.py", line 33, in run_analysis
+    id_res, news_res = await asyncio.gather(
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\agents\identifier_agent.py", line 77, in run
+    result = await llm_json(system, user)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 44, in llm_json
+    raw = await llm_chat(system, user, json_mode=True)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 33, in llm_chat
+    resp = await _client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\resources\chat\completions.py", line 1283, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1796, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1499, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1552, in _request
+    return await self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1621, in _retry_request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1552, in _request
+    return await self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1621, in _retry_request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1562, in _request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+2026-04-13 18:42:24 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-13 18:42:24 | INFO     | db | init_db:23 | DB ready
+2026-04-13 18:42:57 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-13 18:42:57 | INFO     | db | init_db:23 | DB ready
+2026-04-13 18:43:53 | INFO     | db | init_db:17 | Initialising database at data/trading.db
+2026-04-13 18:43:53 | INFO     | db | init_db:23 | DB ready
+2026-04-13 18:44:12 | INFO     | main | analyze:51 | POST /api/analyze | {'symbol': 'BTCUSDT', 'timeframe': '5m', 'trade_type': 'swing', 'account_size': 100.0, 'open_trades': 0, 'invest_amount': 100.0, 'leverage': 20.0}
+2026-04-13 18:44:12 | INFO     | orchestrator | run_analysis:22 | ============================================================
+2026-04-13 18:44:12 | INFO     | orchestrator | run_analysis:23 | ORCHESTRATOR START | BTCUSDT 5m swing invest=100.00 lev=20.0
+2026-04-13 18:44:12 | INFO     | orchestrator | run_analysis:27 | Phase 1: OHLCV fetch
+2026-04-13 18:44:12 | INFO     | data_agent | fetch_ohlcv:80 | fetch_ohlcv | symbol=BTCUSDT timeframe=5m
+2026-04-13 18:44:12 | INFO     | data_agent | _fetch_binance:33 | Fetching Binance OHLCV | symbol=BTCUSDT tf=5m limit=300
+2026-04-13 18:44:13 | INFO     | data_agent | _fetch_binance:52 | Binance fetch OK | rows=300
+2026-04-13 18:44:13 | INFO     | orchestrator | run_analysis:29 | OHLCV rows: 300
+2026-04-13 18:44:13 | INFO     | orchestrator | run_analysis:32 | Phase 2: identifier + news
+2026-04-13 18:44:13 | INFO     | identifier_agent | run:50 | identifier_agent.run | symbol=BTCUSDT trade_type=swing
+2026-04-13 18:44:13 | INFO     | identifier_agent | _search_news_events:18 | Searching historical news for BTCUSDT
+2026-04-13 18:44:15 | WARNING  | identifier_agent | _search_news_events:34 | Historical news fetch failed: 401 Client Error: Unauthorized for url: https://newsapi.org/v2/everything?q=BTCUSDT+market+crash+OR+rally+OR+major+event&sortBy=relevancy&pageSize=5&apiKey=pub_0decd482a88b40b6870bb540aafc7624&language=en
+2026-04-13 18:44:15 | INFO     | news_agent | run:88 | news_agent.run | symbol=BTCUSDT
+2026-04-13 18:44:15 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTCUSDT
+2026-04-13 18:44:16 | INFO     | news_agent | _cryptopanic:34 | CryptoPanic RSS | BTCUSDT
+2026-04-13 18:44:18 | INFO     | news_agent | _coindesk:42 | CoinDesk scrape | BTCUSDT
+2026-04-13 18:44:21 | INFO     | news_agent | _cointelegraph:51 | CoinTelegraph scrape | BTCUSDT
+2026-04-13 18:44:25 | INFO     | news_agent | _newsapi:23 | NewsAPI | q=BTC crypto news
+2026-04-13 18:44:27 | INFO     | news_agent | run:107 | Total unique headlines: 0
+2026-04-13 18:44:30 | ERROR    | llm_client | llm_chat:38 | llm_chat error: Connection error.
+Traceback (most recent call last):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 72, in map_httpcore_exceptions
+    yield
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 377, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection.py", line 103, in handle_async_request
+    return await self._connection.handle_async_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 136, in handle_async_request
+    raise exc
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 86, in handle_async_request
+    await self._send_request_headers(**kwargs)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 144, in _send_request_headers
+    with map_exceptions({h11.LocalProtocolError: LocalProtocolError}):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1528, in _request
+    response = await self._client.send(
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1674, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1702, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1739, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1776, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 376, in handle_async_request
+    with map_httpcore_exceptions():
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 89, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 33, in llm_chat
+    resp = await _client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\resources\chat\completions.py", line 1283, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1796, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1499, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1552, in _request
+    return await self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1621, in _retry_request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1552, in _request
+    return await self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1621, in _retry_request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1562, in _request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+2026-04-13 18:44:30 | ERROR    | main | analyze:61 | Analysis failed: Connection error.
+Traceback (most recent call last):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 72, in map_httpcore_exceptions
+    yield
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 377, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\connection.py", line 103, in handle_async_request
+    return await self._connection.handle_async_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 136, in handle_async_request
+    raise exc
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 86, in handle_async_request
+    await self._send_request_headers(**kwargs)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_async\http11.py", line 144, in _send_request_headers
+    with map_exceptions({h11.LocalProtocolError: LocalProtocolError}):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1528, in _request
+    response = await self._client.send(
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1674, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1702, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1739, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_client.py", line 1776, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 376, in handle_async_request
+    with map_httpcore_exceptions():
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\httpx\_transports\default.py", line 89, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\main.py", line 53, in analyze
+    result = await run_analysis(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\orchestrator.py", line 33, in run_analysis
+    id_res, news_res = await asyncio.gather(
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\agents\identifier_agent.py", line 77, in run
+    result = await llm_json(system, user)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 44, in llm_json
+    raw = await llm_chat(system, user, json_mode=True)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Downloads\trading_agent_v2\sam_Alt\utils\llm_client.py", line 33, in llm_chat
+    resp = await _client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\resources\chat\completions.py", line 1283, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1796, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1499, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1552, in _request
+    return await self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1621, in _retry_request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1552, in _request
+    return await self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1621, in _retry_request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\openai\_base_client.py", line 1562, in _request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.

@@ -1,7 +1,4 @@
-"""
-utils/llm_client.py
-Thin async wrapper around Groq (OpenAI-compatible).
-"""
+
 import json
 from openai import AsyncOpenAI
 from config import GROQ_API_KEY, GROQ_BASE_URL, GROQ_MODEL

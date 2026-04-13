@@ -1,5 +1,6 @@
-# ⚡ AI Multi-Agent Trading Assistant
+# ⚡ AI Trading Assistant — Multi-Agent System
 
+<<<<<<< HEAD
 🚀 Live AI Trading Agent: https://trading-agent-production-feab.up.railway.app
 
 💡 Built with FastAPI + Docker, delivering real-time AI-powered trading insights and automation.
@@ -7,120 +8,309 @@
 Docker image : chandu013/trading-agent:latest
 
 Multi-agent trading decision support system using Groq LLM, Yahoo Finance, Binance, and NewsAPI.
+=======
+> A real-world agentic AI system that analyses stocks and crypto using 8 specialized AI agents working together — and tells you whether to BUY, SELL, or HOLD.
+
+![Python]![UI 1](./ings/Screenshot 2026-04-13 183829.png) ![FastAPI]![UI 2](./ings/Screenshot 2026-04-13 185049.png) ![Groq]![UI 3](./ings/Screenshot 2026-04-13 185110.png) ![Docker]![UI 4](./ings/Screenshot 2026-04-13 185117.png) ![Free]![UI 5](./ings/Screenshot 2026-04-13 185131.png) ![UI 6](./ings/Screenshot 2026-04-13 185137.png)
+>>>>>>> 0c9e452 (Readme)
 
 ---
 
-## 📁 Project Structure
+## 🧠 What Is This?
+
+Most trading tools give you one signal from one algorithm. This system uses **8 AI agents**, each doing one specific job, and then combines their findings to make a final decision — just like a team of analysts working together.
+
+You type in a symbol like `BTCUSDT` or `RELIANCE.NS`, pick a timeframe, and the system:
+
+1. Fetches live price data
+2. Reads recent news from 6 sources
+3. Checks fundamentals (PE ratio, market cap, etc.)
+4. Detects 40+ technical patterns (SMC, ICT, Head & Shoulders, FVGs, Order Blocks...)
+5. Validates a trade setup
+6. Checks your risk
+7. Makes a final decision with confidence score
+8. Sends you a Telegram alert if confidence is high enough
+
+---
+
+## 🤖 What Is Agentic AI? (Simple Explanation)
+
+Think of regular AI like asking one person a question. They answer from what they know.
+
+**Agentic AI** is different. It's like hiring a whole team:
+
+```
+You ask: "Should I buy Bitcoin right now?"
+
+Normal AI:  One response based on training data.
+
+Agentic AI: 
+  → News Analyst reads today's headlines
+  → Technical Analyst checks charts and patterns
+  → Fundamentals Analyst checks market cap and volume
+  → Risk Manager checks your account size
+  → Decision Maker combines everything and answers
+```
+
+Each "agent" is a focused AI with a specific job. They pass their findings to the next agent. The final answer comes from all of them together — not just one.
+
+---
+
+## 🔄 Why No AgentScope Framework?
+
+AgentScope is a framework for managing agents. But frameworks add complexity, extra dependencies, and can be hard to debug.
+
+This project uses **raw Python + asyncio** instead. Here's why that's actually better for learning:
+
+| Thing | AgentScope Framework | This Project (Raw Python) |
+|-------|---------------------|--------------------------|
+| Code you can read | Hidden inside framework | You see every line |
+| Dependencies | Heavy | Minimal |
+| Debugging | Hard | Just check the logs |
+| Learning value | Low (framework does it) | High (you built it) |
+| Performance | Framework overhead | Direct async calls |
+
+The agents here communicate by **passing Python dictionaries** to each other. Simple, fast, transparent.
+
+> 💡 **The agentic pattern is in the design, not the framework.** Each agent has one job, agents depend on each other, and results are combined. That's what makes it agentic.
+
+---
+
+## 🗂️ Project Structure — Every File Explained
 
 ```
 trading_agent/
-├── agents/
-│   ├── data_agent.py          # OHLCV from Binance / Yahoo Finance
-│   ├── identifier_agent.py    # Validates symbol + historical events
-│   ├── fundamental_agent.py   # PE, market cap, ROE, etc.
-│   ├── news_agent.py          # NewsAPI + MoneyControl + Economic Times scraper
-│   ├── technical_agent.py     # Full SMC/ICT + EMA/RSI/MACD/BB + 10 strategies
-│   ├── strategy_agent.py      # Setup selection: OB bounce, FVG, breakout
-│   ├── risk_agent.py          # Position sizing & hard rules
-│   └── decision_agent.py      # Weighted scoring + final trade card
-├── orchestrator.py            # Dependency-aware async pipeline
-├── main.py                    # FastAPI backend
-├── config.py                  # All API keys & settings
-├── requirements.txt
-├── ui/
-│   └── index.html             # Beautiful dark trading dashboard
-└── utils/
-    ├── logger.py              # Central logging (file + console)
-    ├── llm_client.py          # Groq async wrapper
-    ├── alerts.py              # Telegram alerts
-    └── db.py                  # SQLite persistence
+│
+├── 📄 config.py               ← All your API keys and settings live here
+├── 📄 requirements.txt        ← Python packages to install
+├── 📄 main.py                 ← The web server (FastAPI). Starts the app, handles requests
+├── 📄 orchestrator.py         ← The conductor. Runs all 8 agents in the right order
+│
+├── 🤖 agents/
+│   ├── data_agent.py          ← Agent 1: Fetches live price data (Binance for crypto, Yahoo for stocks)
+│   ├── identifier_agent.py    ← Agent 2: Identifies the asset, validates it, finds historical events
+│   ├── news_agent.py          ← Agent 3: Scrapes news from 6 sources, classifies sentiment
+│   ├── fundamental_agent.py   ← Agent 4: Gets PE ratio, market cap, ROE, beta, 52-week range
+│   ├── technical_agent.py     ← Agent 5: Detects 40+ patterns — SMC, ICT, candlesticks, chart patterns
+│   ├── strategy_agent.py      ← Agent 6: Picks the best trade setup from all the data
+│   ├── risk_agent.py          ← Agent 7: Calculates position size, checks risk rules
+│   └── decision_agent.py      ← Agent 8: Combines everything, gives BUY/SELL/HOLD + confidence
+│
+├── 🛠️ utils/
+│   ├── logger.py              ← Logging setup used by every single agent and function
+│   ├── llm_client.py          ← Connects to Groq (the free AI brain) — used by all agents
+│   ├── alerts.py              ← Sends Telegram messages when confidence is high enough
+│   └── db.py                  ← Saves every analysis to SQLite so you can see history
+│
+├── 🌐 ui/
+│   └── index.html             ← The full trading dashboard (HTML + CSS + JS, no framework needed)
+│
+└── 📁 data/
+    └── trading.db             ← Auto-created SQLite database (your analysis history)
 ```
 
 ---
 
-## 🚀 How to Run
+## 🔄 How The Agents Work Together
 
-### 1. Install dependencies
+This is the agent pipeline. Each box is one agent doing its job:
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    YOU (The User)                    │
+│         "Analyse BTCUSDT on 1h timeframe"           │
+└──────────────────────┬──────────────────────────────┘
+                       │
+                       ▼
+          ┌────────────────────────┐
+          │  🗂️  DATA AGENT         │
+          │  Fetches 300 candles    │
+          │  from Binance / Yahoo   │
+          └────────────┬───────────┘
+                       │
+          ┌────────────┴────────────┐
+          │      RUNS IN PARALLEL   │
+          ▼                         ▼
+┌──────────────────┐    ┌──────────────────────┐
+│ 🔍 IDENTIFIER    │    │ 📰 NEWS AGENT         │
+│ Validates symbol │    │ Scrapes 6 news sites  │
+│ Finds asset type │    │ Classifies sentiment  │
+│ Historical events│    │ Bullish/Bearish/Neutral│
+└──────────────────┘    └──────────────────────┘
+          │                         │
+          └────────────┬────────────┘
+                       │
+          ┌────────────┴────────────┐
+          │      RUNS IN PARALLEL   │
+          ▼                         ▼
+┌──────────────────┐    ┌──────────────────────────┐
+│ 📋 FUNDAMENTAL   │    │ 📈 TECHNICAL AGENT        │
+│ PE ratio         │    │ 40+ patterns detected:    │
+│ Market cap       │    │ • SMC: BOS, CHoCH, OBs    │
+│ Revenue growth   │    │ • ICT: FVGs, Liquidity    │
+│ Beta, ROE        │    │ • Chart: H&S, Flags       │
+│ 52-week range    │    │ • Candles: Engulfing etc  │
+└──────────────────┘    │ • Fibonacci levels        │
+                        │ • RSI, MACD, BB, ATR      │
+                        └──────────────────────────┘
+                                    │
+                                    ▼
+                       ┌────────────────────────┐
+                       │  🎯 STRATEGY AGENT      │
+                       │  Depends on Technical   │
+                       │  Picks best setup:      │
+                       │  • Breakout + Retest    │
+                       │  • Order Block Bounce   │
+                       │  • FVG Fill             │
+                       │  Gives Entry / SL / TP  │
+                       └────────────┬───────────┘
+                                    │
+                                    ▼
+                       ┌────────────────────────┐
+                       │  ⚖️  RISK AGENT          │
+                       │  Depends on Strategy    │
+                       │  Checks hard rules:     │
+                       │  • Max 2% risk per trade│
+                       │  • Max 3 open trades    │
+                       │  • Min 60% confidence   │
+                       │  Calculates position    │
+                       └────────────┬───────────┘
+                                    │
+                                    ▼
+                       ┌────────────────────────┐
+                       │  🧠 DECISION AGENT      │
+                       │  Depends on ALL agents  │
+                       │  Weighted scoring:      │
+                       │  News      → 15%        │
+                       │  Fundam.   → 15%        │
+                       │  Technical → 30%        │
+                       │  Strategy  → 25%        │
+                       │  Risk      → 15%        │
+                       └────────────┬───────────┘
+                                    │
+               ┌────────────────────┼─────────────────────┐
+               ▼                    ▼                      ▼
+     ┌──────────────┐    ┌──────────────────┐   ┌──────────────────┐
+     │  📊 Dashboard │    │  💾 Save to DB    │   │  📱 Telegram Bot │
+     │  BUY/SELL/   │    │  SQLite history  │   │  Alert if conf   │
+     │  HOLD card   │    │  for all trades  │   │  > 65%           │
+     └──────────────┘    └──────────────────┘   └──────────────────┘
+```
+
+---
+
+## 🧩 Agent Dependency Map
+
+Some agents run alone. Some agents need other agents to finish first.
+
+```
+Data Agent      ──────────────────────────────► runs first (everyone needs price data)
+
+Identifier      ──────────────────────────────► runs independently (parallel)
+News Agent      ──────────────────────────────► runs independently (parallel)
+
+Fundamental     ──── needs: identifier result ► runs after phase 2
+Technical       ──── needs: price data        ► runs after phase 2 (parallel with fundamental)
+
+Strategy        ──── needs: technical result  ► runs after technical
+Risk            ──── needs: strategy result   ► runs after strategy
+
+Decision        ──── needs: ALL results       ► runs last, combines everything
+```
+
+This is the core idea of **agentic systems**: agents are not all equal. Some are independent workers, some are synthesizers that depend on others.
+
+---
+
+## 📈 What Patterns Does It Detect?
+
+### SMC / ICT Concepts
+- **BOS** (Break of Structure) — price breaks a previous swing high/low
+- **CHoCH** (Change of Character) — trend is reversing
+- **Order Blocks** — the last opposing candle before a strong move (bullish and bearish)
+- **Breaker Blocks** — order blocks that got mitigated and flipped
+- **FVG** (Fair Value Gap) — price imbalance between candles (bullish and bearish)
+- **Liquidity Pools** — equal highs/lows where stop losses cluster
+- **Inducement** — fake move to grab liquidity before the real move
+- **OTE Zone** (Optimal Trade Entry) — 62–79% Fibonacci retracement
+
+### Chart Patterns
+Head & Shoulders · Inverse H&S · Double Top · Double Bottom · Bull Flag · Bear Flag · Ascending Triangle · Descending Triangle · Rising Wedge · Falling Wedge
+
+### Candlestick Patterns
+Doji · Hammer · Shooting Star · Marubozu · Bullish Engulfing · Bearish Engulfing · Piercing Line · Dark Cloud Cover · Morning Star · Evening Star · Three White Soldiers · Three Black Crows
+
+### Classic Indicators
+EMA 9/21/50/200 · SMA 10/20/50 · RSI 7/14 (with divergence) · MACD · Bollinger Bands · ATR · Stochastic · CCI · ADX · MFI · Williams %R · VWAP
+
+---
+
+## 🗞️ News Sources
+
+For **crypto**: NewsAPI + CryptoPanic RSS + CoinDesk + CoinTelegraph
+For **stocks**: NewsAPI + MoneyControl + Economic Times + Investing.com
+
+---
+
+## 🚀 How To Run
+
+### Local
 ```bash
-cd trading_agent
+git clone https://github.com/yourusername/trading-agent
+cd trading-agent
 pip install -r requirements.txt
-```
-
-### 2. (Optional) Set environment variables
-API keys are already hardcoded in `config.py`.  
-To override, set env vars:
-```bash
-export GROQ_API_KEY=your_key
-export NEWS_API_KEY=your_key
-export TELEGRAM_TOKEN=your_token
-export TELEGRAM_CHAT_ID=your_chat_id   # send /start to @magnuskarlbot first
-```
-
-### 3. Start the backend
-```bash
+# Add your API keys to config.py
 uvicorn main:app --reload --port 8000
+# Open http://localhost:8000
 ```
 
-### 4. Open the UI
-Visit: **http://localhost:8000**
-
----
-
-## 📡 API Endpoints
-
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/api/analyze` | Run full analysis |
-| GET  | `/api/history` | Past analyses |
-| GET  | `/api/health`  | Health check |
-
-### Example POST body
-```json
-{
-  "symbol": "BTCUSDT",
-  "timeframe": "1h",
-  "trade_type": "swing",
-  "account_size": 10000,
-  "open_trades": 0
-}
+### Docker
+```bash
+docker run -d -p 8000:8000 chandu013/trading-agent:latest
+# Open http://localhost:8000
 ```
 
 ---
 
-## 🤖 Agent Pipeline
+## 🔑 API Keys Needed (All Free)
 
-```
-Phase 1:  OHLCV data fetch (Binance or Yahoo)
-Phase 2:  Identifier + News (parallel)
-Phase 3:  Fundamental + Technical (parallel)
-Phase 4:  Strategy (depends on Technical)
-Phase 5:  Risk (depends on Strategy + Fundamental)
-Phase 6:  Decision (aggregates all)
-```
+| Key | Where to get | Cost |
+|-----|-------------|------|
+| Groq API | console.groq.com | Free |
+| NewsAPI | newsapi.org | Free (100 req/day) |
+| Telegram Bot | @BotFather on Telegram | Free |
+| Binance | No key needed (public API) | Free |
+| Yahoo Finance | No key needed | Free |
+
+**Total cost: $0**
 
 ---
 
-## 📊 Symbols Guide
+## 📊 Supported Symbols
 
-| Type   | Example Symbols |
-|--------|----------------|
-| Crypto | BTCUSDT, ETHUSDT, SOLUSDT |
-| US Stocks | AAPL, TSLA, NVDA |
-| Indian Stocks | RELIANCE.NS, TCS.NS, INFY.NS |
-| Indices | ^NSEI (Nifty), ^BSESN (Sensex) |
+| Type | Examples |
+|------|---------|
+| Crypto | `BTCUSDT` `ETHUSDT` `SOLUSDT` `BNBUSDT` |
+| US Stocks | `AAPL` `TSLA` `NVDA` `MSFT` |
+| Indian Stocks | `RELIANCE.NS` `TCS.NS` `INFY.NS` |
+| Indices | `^NSEI` `^BSESN` `^GSPC` |
 
 ---
 
 ## ⚠️ Disclaimer
-This is a **decision support tool**. Not financial advice. Always do your own research.
-docker build -t chandu013/trading-agent:latest .
-docker push chandu013/trading-agent:latest
 
-docker build -t chandu013/trading-agent:latest . && docker push chandu013/trading-agent:latest
+This is a **decision support tool** — not financial advice. The system gives structured analysis to help you think through a trade. It will not guarantee profit. Always do your own research and never risk money you cannot afford to lose.
 
-docker run -d -p 8000:8000 --name trading chandu013/trading-agent:latest
+---
 
-docker rm -f trading
-docker run -d -p 8000:8000 --name trading chandu013/trading-agent:latest
+## 🤝 Contributing
 
+<<<<<<< HEAD
 http://localhost:8000/docs
+=======
+Pull requests welcome. Open an issue first to discuss what you'd like to change.
+
+---
+
+*Built with Python · FastAPI · Groq Llama3 · Binance API · Yahoo Finance · BeautifulSoup*
+>>>>>>> 0c9e452 (Readme)
