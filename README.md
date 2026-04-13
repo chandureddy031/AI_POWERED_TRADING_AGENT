@@ -9,10 +9,16 @@ Docker image : chandu013/trading-agent:latest
 
 Multi-agent trading decision support system using Groq LLM, Yahoo Finance, Binance, and NewsAPI.
 =======
-> A real-world agentic AI system that analyses stocks and crypto using 8 specialized AI agents working together — and tells you whether to BUY, SELL, or HOLD.
+A real-world agentic AI system that analyses stocks and crypto using 8 specialized AI agents working together — and tells you whether to BUY, SELL, or HOLD.
 
-![Python]![UI 1](./ings/Screenshot 2026-04-13 183829.png) ![FastAPI]![UI 2](./ings/Screenshot 2026-04-13 185049.png) ![Groq]![UI 3](./ings/Screenshot 2026-04-13 185110.png) ![Docker]![UI 4](./ings/Screenshot 2026-04-13 185117.png) ![Free]![UI 5](./ings/Screenshot 2026-04-13 185131.png) ![UI 6](./ings/Screenshot 2026-04-13 185137.png)
->>>>>>> 0c9e452 (Readme)
+## 📸 Screenshots
+
+![UI 1](./ings/Screenshot 2026-04-13 183829.png)
+![UI 2](./ings/Screenshot 2026-04-13 185049.png)
+![UI 3](./ings/Screenshot 2026-04-13 185110.png)
+![UI 4](./ings/Screenshot 2026-04-13 185117.png)
+![UI 5](./ings/Screenshot 2026-04-13 185131.png)
+![UI 6](./ings/Screenshot 2026-04-13 185137.png)
 
 ---
 
